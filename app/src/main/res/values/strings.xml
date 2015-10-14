@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Bleu Market Group</string>
+
+    <string name="splash_screen_content_description">Bleu Market Group splash screen</string>
+
+
+    <string name="activity_browse_title">Browse</string>
+
+
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="pull_to_refresh_pull_label">Pull to refresh&#8230;</string>
+    <string name="pull_to_refresh_release_label">Release to refresh&#8230;</string>
+    <string name="pull_to_refresh_refreshing_label">Loading&#8230;</string>
+    <string name="pull_to_refresh_tap_label">Tap to refresh&#8230;</string>
+    <string name="title_activity_browse">Browse</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="browse_donate_button_text">DONATE</string>
+    <string name="browse_volunteer_button_text">VOLUNTEER</string>
+
+
+</resources>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bmg="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bmg_green"
+    android:orientation="vertical"
+    tools:context="com.mobile.bmg.activity.BrowseActivity"
+    android:id="@+id/browse_main_layout">
+
+    <com.mobile.android.common.FontableTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp"
+        android:text="@string/activity_browse_title"
+        android:textColor="@color/White"
+        android:textSize="19sp"
+        bmg:typeface="TrebuchetMS.ttf"/>
+
+    <LinearLayout
+        android:id="@+id/browse_button_group"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textAlignment="center"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal"
+        android:background="@drawable/linear_layout_green_border">
+
+        <com.mobile.android.common.FontableTextView
+            android:id="@+id/donate_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/browse_donate_button_text"
+            android:textColor="@color/White"
+            android:textSize="17sp"
+            android:background="@color/bmg_dark_green"
+            bmg:typeface="Dosis-Medium.otf" />
+
+        <com.mobile.android.common.FontableTextView
+            android:id="@+id/volunteer_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/browse_volunteer_button_text"
+            android:textSize="17sp"
+            bmg:typeface="TrebuchetMS.ttf"/>
+
+    </LinearLayout>
+
+    <android.support.v4.view.ViewPager android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
+        android:paddingBottom="6dp"
+        android:layout_weight="1" />
+
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="41dp"
+        android:id="@+id/browse_spinner"
+        android:layout_gravity="center"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="15dp"
+        style="@style/browse_spinner_style"
+        android:spinnerMode="dialog" />
+
+
+    <ProgressBar
+        android:id="@+id/loading_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|bottom"
+        android:layout_marginBottom="20dp"
+        android:visibility="gone" />
+
+</LinearLayout>
