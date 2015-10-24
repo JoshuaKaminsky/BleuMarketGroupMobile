@@ -8,7 +8,7 @@ import com.squareup.okhttp.Request;
  */
 public abstract class BaseAuthorizedRequest implements IApiTokenRequest {
 
-    public String token;
+    public transient String token;
 
     public BaseAuthorizedRequest(String token) {
         this.token = token;

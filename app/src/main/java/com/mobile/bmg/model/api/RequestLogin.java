@@ -20,6 +20,6 @@ public class RequestLogin implements IApiRequest {
 
     @Override
     public String getUrl() {
-        return null;
+        return Urls.getLogin();
     }
 }

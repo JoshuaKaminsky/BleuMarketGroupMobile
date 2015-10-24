@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bmg="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/White"
+    tools:context="com.mobile.bmg.activity.SearchActivity">
+
+    <com.mobile.android.common.FontableTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp"
+        android:text="@string/activity_title_search"
+        android:textColor="@color/White"
+        android:textSize="19sp"
+        bmg:typeface="TrebuchetMS.ttf"
+        android:background="@color/bmg_green"/>
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@color/White"
+            android:id="@+id/search_text"
+            android:hint="@string/search_zip_code_hint"
+            android:paddingLeft="5dp"
+            android:inputType="number" />
+
+        <ImageView
+            android:id="@+id/search_zip_code_button"
+            android:layout_height="44dp"
+            android:layout_width="44dp"
+            android:src="@drawable/tabbaritem_search"
+            android:padding="12dp">
+        </ImageView>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/Gray"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp" />
+
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="10dp"
+        android:id="@+id/search_map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_weight="1" />
+
+</LinearLayout>

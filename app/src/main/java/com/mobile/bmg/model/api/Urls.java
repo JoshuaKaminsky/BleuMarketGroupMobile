@@ -17,7 +17,17 @@ public class Urls {
 
     private static final String opportunitiesUrl = "v1/opportunities/";
 
+    private static final String cartUrl = "v1/cart/";
+
+    private static final String clearUrl = "clear/";
+
+    private static final String checkoutUrl = "checkout/";
+
+    private static final String transactionUrl = "v1/transaction";
+
     private static final String ourUrl = "v1/our";
+
+    private static final String meUrl = "me";
 
     private static final String totalsUrl = "totals";
 
@@ -45,6 +55,10 @@ public class Urls {
 
     public static String getUser(int id) {
         return String.format("%s%s%d", baseUrl, usersUrl, id);
+    }
+
+    public static String getLoggedInUser() {
+        return String.format("%s%s%s", baseUrl, usersUrl, meUrl);
     }
 
     public static String getLogin() {
@@ -97,8 +111,8 @@ public class Urls {
         return String.format("%s/%s", getOrganization(id), "users");
     }
 
-    public static String getOrganizationByTag(String tag) {
-        return String.format("%s%s?tag_list=%s", baseUrl, organizationsUrl, tag);
+    public static String getOrganizationByTag(String tag, int page) {
+        return String.format("%s%s?tag_list=%s&page=%d", baseUrl, organizationsUrl, tag, page > 0 ? page : 1);
     }
 
     public static String getOrganizationTotals(int id) {
@@ -174,4 +188,14 @@ public class Urls {
     public static String getNews() {
         return String.format("%s%s%s", baseUrl, ourUrl, newsUrl);
     }
+
+    public static String getUserCart(){return String.format("%s%s", baseUrl, cartUrl);}
+
+    public static String addToUserCart(){return String.format("%s%s", baseUrl, cartUrl);}
+
+    public static String removeFromUserCart(int itemId) { return String.format("%s%s%d", baseUrl, cartUrl, itemId);}
+
+    public static String deleteUserCart() { return String.format("%s%s%s", baseUrl, cartUrl, clearUrl);}
+
+    public static String chechout() {return String.format("%s%s%s", baseUrl, cartUrl, checkoutUrl);}
 }

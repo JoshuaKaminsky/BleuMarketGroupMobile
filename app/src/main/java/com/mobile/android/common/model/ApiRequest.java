@@ -6,11 +6,11 @@ import com.mobile.android.contract.IResultCallback;
 /**
  * Created by Josh on 10/14/15.
  */
-public class PageRequest<TResult> {
+public class ApiRequest<TResult> {
 
     private IAsyncParamedAction<TResult, Integer> request;
 
-    public PageRequest(IAsyncParamedAction<TResult, Integer> request) {
+    public ApiRequest(IAsyncParamedAction<TResult, Integer> request) {
         this.request = request;
     }
 

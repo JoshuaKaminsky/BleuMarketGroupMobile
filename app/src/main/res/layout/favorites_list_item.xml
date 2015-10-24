@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bmg="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:background="@color/White"
+    android:padding="10dp">
+
+    <ToggleButton
+        android:id="@+id/favorites_button"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_margin="10dp"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/favorite_style_selector"
+        android:textOff=""
+        android:textOn=""
+        android:focusable="false"/>
+
+    <com.mobile.android.common.FontableTextView
+        android:id="@+id/favorites_company_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp"
+        android:textColor="@color/bmg_dark_gray"
+        android:textSize="19sp"
+        bmg:typeface="TrebuchetMS.ttf"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:gravity="center" />
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/tableviewcell_arrow"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/tableviewcell_arrow"
+            android:paddingLeft="20dp"/>
+
+    </FrameLayout>
+
+</LinearLayout>

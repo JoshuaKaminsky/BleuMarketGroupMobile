@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bmg="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/White"
+    tools:context="com.mobile.bmg.activity.MessagesActivity">
+
+    <com.mobile.android.common.FontableTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp"
+        android:text="@string/title_activity_messages"
+        android:textColor="@color/White"
+        android:textSize="19sp"
+        bmg:typeface="TrebuchetMS.ttf"
+        android:background="@color/bmg_green"/>
+
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:src="@drawable/no_messages"
+        android:padding="40dp" />
+
+</LinearLayout>

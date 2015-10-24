@@ -9,10 +9,12 @@ import java.net.HttpURLConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.squareup.okhttp.Response;
@@ -37,6 +39,27 @@ public class ImageDownloader {
             imageView.setImageBitmap(bitmap);
         }
     }
+
+    public void download(String url, View view) {
+        Bitmap bitmap = null;
+
+        try{
+            bitmap = _cache.getBitmapFromCache(url);
+        } catch(Exception excpetion) {
+            Log.d("Image Downloader", "Error retrieving image from cache with url " + url, excpetion);
+        }
+
+        if (bitmap == null) {
+            forceDownload(url, view);
+        } else {
+            cancelPotentialDownload(url, view);
+            if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                view.setBackground(new BitmapDrawable(view.getResources(), bitmap));
+            } else {
+                view.setBackgroundDrawable(new BitmapDrawable(view.getResources(), bitmap));
+            }
+        }
+    }
 	
 	private void forceDownload(String url, ImageView imageView) {
         if (url == null) {
@@ -48,7 +71,25 @@ public class ImageDownloader {
             BitmapDownloaderTask task = new BitmapDownloaderTask(imageView);
             DownloadedDrawable downloadedDrawable = new DownloadedDrawable(task);
             imageView.setImageDrawable(downloadedDrawable);
-            task.execute(url);            
+            task.execute(url);
+        }
+    }
+
+    private void forceDownload(String url, View view) {
+        if (url == null) {
+            view.setBackgroundResource(android.R.color.transparent);
+            return;
+        }
+
+        if (cancelPotentialDownload(url, view)) {
+            BitmapDownloaderTask task = new BitmapDownloaderTask(view);
+            DownloadedDrawable downloadedDrawable = new DownloadedDrawable(task);
+            if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                view.setBackground(downloadedDrawable);
+            } else {
+                view.setBackgroundDrawable(downloadedDrawable);
+            }
+            task.execute(url);
         }
     }
 	
@@ -65,10 +106,35 @@ public class ImageDownloader {
         }
         return true;
     }
+
+    private static boolean cancelPotentialDownload(String url, View view) {
+        BitmapDownloaderTask bitmapDownloaderTask = getBitmapDownloaderTask(view);
+
+        if (bitmapDownloaderTask != null) {
+            String bitmapUrl = bitmapDownloaderTask.url;
+            if ((bitmapUrl == null) || (!bitmapUrl.equals(url))) {
+                bitmapDownloaderTask.cancel(true);
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
 	
 	private static BitmapDownloaderTask getBitmapDownloaderTask(ImageView imageView) {
         if (imageView != null) {
             Drawable drawable = imageView.getDrawable();
+            if (drawable instanceof DownloadedDrawable) {
+                DownloadedDrawable downloadedDrawable = (DownloadedDrawable)drawable;
+                return downloadedDrawable.getBitmapDownloaderTask();
+            }
+        }
+        return null;
+    }
+
+    private static BitmapDownloaderTask getBitmapDownloaderTask(View view) {
+        if (view != null) {
+            Drawable drawable = view.getBackground();
             if (drawable instanceof DownloadedDrawable) {
                 DownloadedDrawable downloadedDrawable = (DownloadedDrawable)drawable;
                 return downloadedDrawable.getBitmapDownloaderTask();
@@ -138,10 +204,15 @@ public class ImageDownloader {
     
     class BitmapDownloaderTask extends AsyncTask<String, Void, Bitmap> {
         private String url;
-        private final WeakReference<ImageView> imageViewReference;
+        private WeakReference<ImageView> imageViewReference = null;
+        private WeakReference<View> viewReference = null;
 
         public BitmapDownloaderTask(ImageView imageView) {
             imageViewReference = new WeakReference<ImageView>(imageView);
+        }
+
+        public BitmapDownloaderTask(View view) {
+            viewReference = new WeakReference<View>(view);
         }
 
         @Override
@@ -164,6 +235,19 @@ public class ImageDownloader {
                 
                 if (this == bitmapDownloaderTask) {
                     imageView.setImageBitmap(bitmap);
+                }
+            }
+
+            if(viewReference != null) {
+                View view = viewReference.get();
+                BitmapDownloaderTask bitmapDownloaderTask = getBitmapDownloaderTask(view);
+
+                if (this == bitmapDownloaderTask) {
+                    if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                        view.setBackground(new BitmapDrawable(view.getResources(), bitmap));
+                    } else {
+                        view.setBackgroundDrawable(new BitmapDrawable(view.getResources(), bitmap));
+                    }
                 }
             }
         }

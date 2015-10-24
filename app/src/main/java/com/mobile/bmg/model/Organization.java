@@ -116,8 +116,23 @@ public class Organization {
     @SerializedName("primary_logo")
     public String primaryLogo;
 
-    @SerializedName("tags_list")
+    @SerializedName("tag_list")
     public String[] tags;
+
+    @SerializedName("contrib_gifts_grants")
+    public double contributions;
+
+    @SerializedName("total_revenue")
+    public double totalRevenue;
+
+    @SerializedName("program_expenses")
+    public double programExpenses;
+
+    @SerializedName("administration_expenses")
+    public double administrativeExpenses;
+
+    @SerializedName("fundraising_expenses")
+    public double fundraisingExpenses;
 
     public int status;
 

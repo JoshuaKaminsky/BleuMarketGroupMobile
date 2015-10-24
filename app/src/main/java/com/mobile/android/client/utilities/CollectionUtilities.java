@@ -3,7 +3,6 @@ package com.mobile.android.client.utilities;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Timer;
 
 import com.mobile.android.contract.IIdentifier;
 

@@ -18,7 +18,7 @@ public class HeightResizeAnimation extends Animation {
 	    this.startHeight = this.view.getMeasuredWidth();
 	    this.targetHeight = targetHeight;
 	    this.newHeight = this.startHeight;
-	    this.expand = targetHeight < targetHeight;
+	    this.expand = startHeight < targetHeight;
 	    
 	    this.setDuration(durationInMilliseconds);
 	}

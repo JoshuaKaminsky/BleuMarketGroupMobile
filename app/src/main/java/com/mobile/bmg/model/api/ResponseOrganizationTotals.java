@@ -14,5 +14,5 @@ public class ResponseOrganizationTotals {
     public double donationAmount;
 
     @SerializedName("donation_count")
-    public double count;
+    public int count;
 }

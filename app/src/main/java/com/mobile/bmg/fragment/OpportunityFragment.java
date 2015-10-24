@@ -1,5 +1,6 @@
 package com.mobile.bmg.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -12,13 +13,16 @@ import android.widget.ImageView;
 import com.mobile.android.client.utilities.ImageDownloader;
 import com.mobile.android.client.utilities.JsonUtilities;
 import com.mobile.android.client.utilities.StringUtilities;
+import com.mobile.android.client.utilities.Utilities;
 import com.mobile.android.common.FontableTextView;
 import com.mobile.bmg.R;
+import com.mobile.bmg.activity.OpportunityInformationActivity;
 import com.mobile.bmg.model.Category;
 import com.mobile.bmg.model.Opportunity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Josh on 10/12/15.
@@ -26,19 +30,25 @@ import java.util.List;
 public class OpportunityFragment  extends Fragment {
 
     private static String ItemKey = "ITEM_KEY";
+    private static String CoverIndexKey = "COVER_INDEX_KEY";
 
     protected Opportunity opportunity;
 
+    private static int coverIndex = -1;
+
+    private boolean noItems;
+
     private View rootView;
 
-    public static OpportunityFragment newInstance(Opportunity opportunity) {
+    public static OpportunityFragment newInstance(Opportunity opportunity, int coverIndex) {
         OpportunityFragment fragment = new OpportunityFragment();
 
         Bundle bundle = new Bundle();
         bundle.putString(ItemKey, JsonUtilities.getJson(opportunity));
+        bundle.putInt(CoverIndexKey, coverIndex);
 
         fragment.setArguments(bundle);
-        fragment.opportunity = opportunity;
+        fragment.setOpportunity(opportunity, coverIndex);
 
         return fragment;
     }
@@ -46,8 +56,9 @@ public class OpportunityFragment  extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null)
+        if (savedInstanceState != null) {
             this.setOpportunity(JsonUtilities.parseJson(savedInstanceState.getString(ItemKey), Opportunity.class));
+        }
     }
 
     @Override
@@ -55,14 +66,16 @@ public class OpportunityFragment  extends Fragment {
         super.onSaveInstanceState(outState);
 
         outState.putString(ItemKey, JsonUtilities.getJson(this.opportunity));
+        outState.putInt(CoverIndexKey, this.coverIndex);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(savedInstanceState != null)
+        if(savedInstanceState != null) {
             this.setOpportunity(JsonUtilities.parseJson(savedInstanceState.getString(ItemKey), Opportunity.class));
+        }
     }
 
     @Override
@@ -74,14 +87,31 @@ public class OpportunityFragment  extends Fragment {
 
     private View setView(View rootView) {
         if(this.getOpportunity() == null || rootView == null) {
+            if(noItems) {
+                rootView.findViewById(R.id.loading_spinner).setVisibility(View.GONE);
+
+                ImageView noItemTextView = (ImageView)rootView.findViewById(R.id.no_item_image);
+                noItemTextView.setVisibility(View.VISIBLE);
+                noItemTextView.setImageResource(R.drawable.no_charities);
+            }
             return rootView;
         }
 
         rootView.findViewById(R.id.loading_spinner).setVisibility(View.GONE);
 
         rootView.findViewById(R.id.browse_fragment_view).setVisibility(View.VISIBLE);
-        //set the background of this based on the category
+
         FrameLayout header = (FrameLayout)rootView.findViewById(R.id.section_header);
+        header.setBackgroundResource(Utilities.getResId(String.format("cover%d", this.coverIndex), R.drawable.class));
+        header.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), OpportunityInformationActivity.class);
+                intent.putExtra(OpportunityInformationActivity.ItemKey, JsonUtilities.getJson(opportunity));
+
+                startActivity(intent);
+            }
+        });
 
         ImageView logo = (ImageView)rootView.findViewById(R.id.item_logo);
         new ImageDownloader().download(this.opportunity.image, logo);
@@ -117,7 +147,28 @@ public class OpportunityFragment  extends Fragment {
     }
 
     public void setOpportunity(Opportunity opportunity) {
+        int coverIndex = this.coverIndex;
+        if(coverIndex == -1){
+            coverIndex = new Random().nextInt(10);
+        }
+
+        this.setOpportunity(opportunity, coverIndex);
+    }
+
+    public void setOpportunity(Opportunity opportunity, int coverIndex) {
         this.opportunity = opportunity;
+
+        this.noItems = false;
+
+        this.coverIndex = coverIndex;
+
+        this.setView(this.rootView);
+    }
+
+    public void setNoOpportunity() {
+        this.opportunity = null;
+
+        this.noItems = true;
 
         this.setView(this.rootView);
     }

@@ -1,11 +1,14 @@
 package com.mobile.bmg.model.api;
 
 import com.mobile.bmg.contract.IApiRequest;
+import com.mobile.bmg.model.Tag;
 
 /**
  * Created by Josh on 9/13/15.
  */
 public class RequestOrganizations implements IApiRequest {
+
+    public Tag tag;
 
     public String search;
 
@@ -21,6 +24,10 @@ public class RequestOrganizations implements IApiRequest {
 
     @Override
     public String getUrl() {
+        if(tag != null) {
+            return Urls.getOrganizationByTag(tag.name, page);
+        }
+
         return Urls.getOrganizationsByLocationDistanceAndPage(search, distance, page);
     }
 }

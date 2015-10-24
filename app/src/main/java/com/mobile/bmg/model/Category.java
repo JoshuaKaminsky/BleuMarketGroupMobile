@@ -13,4 +13,9 @@ public class Category {
 
     @SerializedName("taggings_count")
     public int count;
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
 }

@@ -9,17 +9,18 @@ import com.squareup.okhttp.Response;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.widget.ImageView;
 
 public class HttpGetImageAsyncTask extends HttpAsyncTask<Void, Bitmap>{
 	
 	private static WeakReference<ImageView> _imageViewReference;
 	private String url;
-	
+
 	public HttpGetImageAsyncTask(ImageView imageView) {
 		super(new IResultCallback<Bitmap>() {
 
-			public Class<Bitmap> GetType() {
+			public Class<Bitmap> getType() {
 				return Bitmap.class;
 			}
 
@@ -44,6 +45,7 @@ public class HttpGetImageAsyncTask extends HttpAsyncTask<Void, Bitmap>{
 	
 	@Override
 	public void Get(final String url) {
+		this.url = url;
 		_httpAction = new Callable<Response>() {
 
 			public Response call() throws Exception {
@@ -56,27 +58,32 @@ public class HttpGetImageAsyncTask extends HttpAsyncTask<Void, Bitmap>{
 	
 	@Override
 	protected Bitmap doInBackground(String... urls) {
-		InputStream inputStream = getDataStream();
-		
-		Bitmap result = null;
-		
-		if(!isCancelled()) {
-			 result = BitmapFactory.decodeStream(inputStream);
+		try {
+			response = _httpAction.call();
+		} catch (Exception e) {
+			Log.e("Http Request", e.getLocalizedMessage());
 		}
-		
+
+		InputStream stream = null;
+
+		try {
+			stream = response.body().byteStream();
+		} catch (Exception e) {
+			Log.e("Http Request", e.getMessage());
+		}
+
+		Bitmap result = null;
+
+		if(!isCancelled()) {
+			 result = BitmapFactory.decodeStream(stream);
+		}
+
 		return result;
-	};
-	
-	@Override	
-	protected void onPostExecute(Bitmap result) {
-		if(_callback != null) {
-			_callback.call(result);
-		}		
 	}
 
 	public String getUrl() {
 		return url;
-	}		
+	}
 }
 	
 	

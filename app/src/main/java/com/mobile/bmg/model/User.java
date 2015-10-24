@@ -7,6 +7,8 @@ import com.google.gson.annotations.SerializedName;
  */
 public class User {
 
+    public int id;
+
     @SerializedName("email_address")
     public String emailAddress;
 
@@ -35,5 +37,25 @@ public class User {
 
     @SerializedName("postal_code")
     public String postalCode;
+
+    public boolean isValid() {
+        if(emailAddress == null || emailAddress.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(emailAddress).matches()) {
+            return false;
+        }
+
+        if(password == null || password.isEmpty() || password.length() < 8 || passwordConfirmation == null || passwordConfirmation.isEmpty() || !password.equalsIgnoreCase(passwordConfirmation)) {
+            return false;
+        }
+
+        if(firstName == null || firstName.isEmpty()) {
+            return false;
+        }
+
+        if(lastName == null || lastName.isEmpty()) {
+            return false;
+        }
+
+        return true;
+    }
 
 }

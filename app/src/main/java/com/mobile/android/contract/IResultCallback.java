@@ -8,7 +8,7 @@ public interface IResultCallback<T> {
 	 * @return 
 	 * The type of the result
 	 */
-	Class<T> GetType();
+	Class<T> getType();
 	
 	/**
 	 * The callback to be invoked upon post execute

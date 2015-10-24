@@ -23,7 +23,7 @@ public class BmgApiClientTest extends InstrumentationTestCase {
 
         IResultCallback<ResponseOrganizations> callback = new IResultCallback<ResponseOrganizations>() {
             @Override
-            public Class<ResponseOrganizations> GetType() {
+            public Class<ResponseOrganizations> getType() {
                 return ResponseOrganizations.class;
             }
 

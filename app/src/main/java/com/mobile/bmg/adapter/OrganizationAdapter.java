@@ -3,10 +3,9 @@ package com.mobile.bmg.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.mobile.android.client.utilities.CollectionUtilities;
-import com.mobile.android.common.model.PageRequest;
+import com.mobile.android.common.model.ApiRequest;
 import com.mobile.android.contract.IResultCallback;
 import com.mobile.bmg.fragment.OrganizationFragment;
 import com.mobile.bmg.model.Organization;
@@ -14,13 +13,18 @@ import com.mobile.bmg.model.api.ResponseOrganizations;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Josh on 10/12/15.
  */
-public class OrganizationAdapter extends FragmentStatePagerAdapter {
+public class OrganizationAdapter extends FragmentPagerAdapter {
 
-    private PageRequest<ResponseOrganizations> pageRequest;
+    private final Random coverIndexGenerator;
+
+    private FragmentManager fragmentManager;
+
+    private ApiRequest<ResponseOrganizations> apiRequest;
 
     private final List<Organization> organizations = new ArrayList<Organization>();
 
@@ -30,10 +34,13 @@ public class OrganizationAdapter extends FragmentStatePagerAdapter {
 
     private int totalCount = 0;
 
-    public OrganizationAdapter(FragmentManager fragmentManager, PageRequest<ResponseOrganizations> pageRequest) {
+    public OrganizationAdapter(FragmentManager fragmentManager, ApiRequest<ResponseOrganizations> apiRequest) {
         super(fragmentManager);
+        this.fragmentManager = fragmentManager;
 
-        this.pageRequest = pageRequest;
+        this.apiRequest = apiRequest;
+
+        this.coverIndexGenerator = new Random();
     }
 
     @Override
@@ -51,14 +58,14 @@ public class OrganizationAdapter extends FragmentStatePagerAdapter {
         this.currentPage = position / pageSize;
 
         if(organizations.size() > position) {
-            return OrganizationFragment.newInstance(this.organizations.get(position));
+            return OrganizationFragment.newInstance(this.organizations.get(position), this.coverIndexGenerator.nextInt(10));
         }
 
         final OrganizationFragment fragment = new OrganizationFragment();
 
-        this.pageRequest.Request(this.currentPage + 1, new IResultCallback<ResponseOrganizations>() {
+        this.apiRequest.Request(this.currentPage + 1, new IResultCallback<ResponseOrganizations>() {
             @Override
-            public Class<ResponseOrganizations> GetType() {
+            public Class<ResponseOrganizations> getType() {
                 return ResponseOrganizations.class;
             }
 
@@ -70,8 +77,11 @@ public class OrganizationAdapter extends FragmentStatePagerAdapter {
 
                 organizations.addAll(CollectionUtilities.ToList(result.organizations));
 
-                if(result != null && result.organizations != null && result.organizations.length > 0)
-                    fragment.setOrganization(result.organizations[0]);
+                if(result != null && result.organizations != null && result.organizations.length > 0) {
+                    fragment.setOrganization(result.organizations[0], coverIndexGenerator.nextInt(10));
+                } else {
+                    fragment.setNoOrganization();
+                }
 
                 notifyDataSetChanged();
             }
@@ -82,9 +92,7 @@ public class OrganizationAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getItemPosition(Object item) {
-        Class c = item.getClass();
-
-        if (c != OrganizationFragment.class) {
+        if (!(item instanceof OrganizationFragment)) {
             return POSITION_NONE;
         }
 
@@ -92,16 +100,34 @@ public class OrganizationAdapter extends FragmentStatePagerAdapter {
 
         Organization organization = fragment.getOrganization();
         if(organization == null)
-            return POSITION_UNCHANGED;
+            return POSITION_NONE;
 
-        int position = this.organizations.indexOf(organization);
-
-        return position;
+        return POSITION_NONE;
+        //return this.organizations.indexOf(organization);
     }
 
     @Override
-    public float getPageWidth (int position)
-    {
+    public float getPageWidth (int position) {
+        if(this.totalCount <= 1) {
+            return 1f;
+        }
+
         return 0.93f;
+    }
+
+    public void update() {
+        this.currentPage = 0;
+        this.totalCount = 0;
+
+        this.organizations.clear();
+
+        List<Fragment> fragments = fragmentManager.getFragments();
+        if(fragments == null) {
+            return;
+        }
+
+        fragments.clear();
+
+        notifyDataSetChanged();
     }
 }
